@@ -12,7 +12,13 @@ def get_tokens(tokens_file):
     return tokens_from_file
 
 
-if __name__ == '__main__':
+def get_userid_vk():
+    # раскомментировать в готовой программе
+    # user_id = input('Введите идентификатор (ID) пользователя: ')
+    user_id = '24669426'
+    return user_id
 
+
+if __name__ == '__main__':
+    userid_vk = get_userid_vk()
     tokens_list = get_tokens(TOKENS_FILE)
-    pprint(tokens_list)
