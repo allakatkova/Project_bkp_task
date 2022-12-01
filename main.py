@@ -21,10 +21,13 @@ def get_userid_vk():
     return user_id
 
 
-def get_info_vk(userid, token):
-    url = URL_VK + 'users.get'
+def get_list_photos_album(userid, token, count_photo=5):
+    url = URL_VK + 'photos.get'
     params = {
-        'user_ids': userid,
+        'owner_id': userid,
+        'album_id': 'profile',
+        'extended': '1',
+        'count': count_photo,
         'access_token': token,
         'v': '5.131'
     }
@@ -35,5 +38,5 @@ def get_info_vk(userid, token):
 if __name__ == '__main__':
     userid_vk = get_userid_vk()
     tokens_list = get_tokens(TOKENS_FILE)
-    info = get_info_vk(userid_vk, tokens_list['VK'])
+    info = get_list_photos_album(userid_vk, tokens_list['VK'])
     pprint(info)
