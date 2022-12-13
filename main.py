@@ -20,7 +20,8 @@ class YaUploader:
     def get_files_list(self):
         url_files_list = 'https://cloud-api.yandex.net:443/v1/disk/resources/files'
         headers = self.get_headers()
-        response = requests.get(url_files_list, headers=headers)
+        params = {"media_type": "image"}
+        response = requests.get(url_files_list, headers=headers, params=params)
         return response.json()
 
     def _get_upload_link(self, disk_file_path, link):
@@ -113,3 +114,4 @@ if __name__ == '__main__':
 
     uploader = YaUploader(token_yd)
     uploader.upload(DIR_BACKUP_YD, names_files_with_urls)
+    pprint(uploader.get_files_list())
