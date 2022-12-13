@@ -100,12 +100,10 @@ def write_json_file(list_for_json):
 
 if __name__ == '__main__':
 
-    # userid_vk = input('Введите ID пользователя ВКонтакте: ')
-    userid_vk = '24669426'
+    userid_vk = input('Введите ID пользователя ВКонтакте: ')
+    token_yd = input('Введите token Я.Диск: ')
 
     tokens_list = get_tokens(TOKENS_FILE)
-    # token_yd = input('Введите token Я.Диск: ')
-    token_yd = tokens_list['YD']
 
     downloader_from_vk = VkDownloader(tokens_list['VK'], userid_vk)
     info_photos_album = downloader_from_vk.get_info_photos_album()
@@ -114,4 +112,5 @@ if __name__ == '__main__':
 
     uploader = YaUploader(token_yd)
     uploader.upload(DIR_BACKUP_YD, names_files_with_urls)
+    print()
     pprint(uploader.get_files_list())
