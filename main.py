@@ -1,5 +1,6 @@
 from pprint import pprint
 import requests
+import json
 
 DIR_BACKUP_YD = '/backup_VK_photo/'
 TOKENS_FILE = 'tokens.txt'
@@ -61,6 +62,7 @@ class VkDownloader:
 
     def get_photos_data(self, info_photos_album):
         list_file_for_backup = {}
+        list_for_json = []
         list_photo_data = info_photos_album['response']['items']
         for photo in list_photo_data:
             max_size = 0
@@ -70,6 +72,7 @@ class VkDownloader:
                 if size['height'] >= max_size:
                     max_size = size['height']
                     url_max_size = size['url']
+                    symbol_size = size['type']
             file_name = str(photo['likes']['count'])
             date_photo = photo['date']
             # если количество лайков одинаково, то добавить дату загрузки.
@@ -77,7 +80,8 @@ class VkDownloader:
                 file_name = f"{file_name}_{date_photo}"
             file_name += '.jpg'
             list_file_for_backup[file_name] = url_max_size
-        return list_file_for_backup
+            list_for_json.append({'file_name': file_name, 'size': symbol_size})
+        return list_file_for_backup, list_for_json
 
 
 def get_tokens(tokens_file):
@@ -86,6 +90,11 @@ def get_tokens(tokens_file):
         tokens_from_file.update({'YD': file.readline()[:-1]})
         tokens_from_file.update({'VK': file.readline()[:-1]})
     return tokens_from_file
+
+
+def write_json_file(list_for_json):
+    with open('result_of_saving_photos.json', 'w', encoding='utf-8') as file_json:
+        json.dump(list_for_json, file_json, indent=2)
 
 
 if __name__ == '__main__':
@@ -99,7 +108,8 @@ if __name__ == '__main__':
 
     downloader_from_vk = VkDownloader(tokens_list['VK'], userid_vk)
     info_photos_album = downloader_from_vk.get_info_photos_album()
-    names_files_with_urls = downloader_from_vk.get_photos_data(info_photos_album)
+    names_files_with_urls, list_for_json = downloader_from_vk.get_photos_data(info_photos_album)
+    write_json_file(list_for_json)
 
     uploader = YaUploader(token_yd)
     uploader.upload(DIR_BACKUP_YD, names_files_with_urls)
