@@ -42,6 +42,13 @@ class YaUploader:
                 pprint(f'Сохранена {count_file} фотография из {len(list_files)} под именем {filename}')
         print('Выполнено! Бэкап фотографий создан успешно.')
 
+    def folder_creation(self, folder_name):
+        url = f'https://cloud-api.yandex.net/v1/disk/resources/'
+        headers = self.get_headers()
+        params = {'path': f'{folder_name}',
+                  'overwrite': 'false'}
+        response = requests.put(url=url, headers=headers, params=params)
+
 
 class VkDownloader:
     def __init__(self, token: str, userid: str):
@@ -111,6 +118,7 @@ if __name__ == '__main__':
     write_json_file(list_for_json)
 
     uploader = YaUploader(token_yd)
+    uploader.folder_creation(DIR_BACKUP_YD)
     uploader.upload(DIR_BACKUP_YD, names_files_with_urls)
     print()
     pprint(uploader.get_files_list())
